@@ -21,7 +21,7 @@ public class UrlController {
     @GetMapping
     public Map<String, String> index() {
         String key = "message";
-        String value = "Hello World!";
+        String value = "Welcome! You're using v1 of the API";
         return Map.of(key, value);
     }
 
