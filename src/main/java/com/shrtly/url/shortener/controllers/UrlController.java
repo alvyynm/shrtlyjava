@@ -4,10 +4,7 @@ import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.services.UrlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -32,6 +29,21 @@ public class UrlController {
         String originalUrl = payload.get("originalUrl");
         Url responseData = urlService.createUrl(originalUrl);
         return new ResponseEntity<>(responseData, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/urls/{urlId}")
+    public Url getUrl(@PathVariable String urlId) {
+        return urlService.getUrl(urlId);
+    }
+
+    @DeleteMapping("/urls/{id}")
+    public String deleteUrl(@PathVariable Integer id) {
+        return urlService.deleteUrl(id);
+    }
+
+    @GetMapping("/urls")
+    public Iterable<Url> getUrls() {
+        return urlService.getUrls();
     }
 
 }
