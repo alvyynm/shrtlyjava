@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RequestMapping({"/api/v1", "/api/v1/"})
 public class UrlController {
 
     private final UrlService urlService;
@@ -17,7 +18,7 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public Map<String, String> index() {
         String key = "message";
         String value = "Hello World!";
