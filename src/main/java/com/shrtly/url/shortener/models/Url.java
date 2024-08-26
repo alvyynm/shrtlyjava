@@ -7,6 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("URL")
 public class Url {
     @Id
+    private Integer id;
+
     private String urlId;
 
     @NotEmpty

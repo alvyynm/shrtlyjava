@@ -4,5 +4,5 @@ import com.shrtly.url.shortener.models.Url;
 import org.springframework.data.repository.CrudRepository;
 
 //  the repository that holds Url records
-public interface UrlRepository extends CrudRepository<Url, String> {
+public interface UrlRepository extends CrudRepository<Url, Integer> {
 }
