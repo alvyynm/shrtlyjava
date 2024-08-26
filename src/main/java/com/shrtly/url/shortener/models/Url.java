@@ -13,4 +13,28 @@ public class Url {
     private String originalUrl;
 
     private String shortenedUrl;
+
+    public String getUrlId() {
+        return urlId;
+    }
+
+    public void setUrlId(String urlId) {
+        this.urlId = urlId;
+    }
+
+    public @NotEmpty String getOriginalUrl() {
+        return originalUrl;
+    }
+
+    public void setOriginalUrl(@NotEmpty String originalUrl) {
+        this.originalUrl = originalUrl;
+    }
+
+    public String getShortenedUrl() {
+        return shortenedUrl;
+    }
+
+    public void setShortenedUrl(String shortenedUrl) {
+        this.shortenedUrl = shortenedUrl;
+    }
 }
