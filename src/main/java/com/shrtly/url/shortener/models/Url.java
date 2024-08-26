@@ -20,6 +20,10 @@ public class Url {
         return urlId;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
     public void setUrlId(String urlId) {
         this.urlId = urlId;
     }
