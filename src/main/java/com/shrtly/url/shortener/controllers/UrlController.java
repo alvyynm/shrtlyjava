@@ -51,6 +51,11 @@ public class UrlController {
             return new ResponseEntity<>("originalUrl is required", HttpStatus.BAD_REQUEST);
         }
 
+        // validate url
+        if(!isValidUrl(payload.getOriginalUrl())) {
+            return new ResponseEntity<>("Invalid URL", HttpStatus.BAD_REQUEST);
+        }
+
         Url responseData = urlService.createUrl(payload.getOriginalUrl());
         return new ResponseEntity<>(responseData, HttpStatus.CREATED);
     }
