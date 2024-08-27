@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Map;
 
 @RestController
@@ -81,6 +84,15 @@ public class UrlController {
     @GetMapping("/urls")
     public Iterable<Url> getUrls() {
         return urlService.getUrls();
+    }
+
+    private boolean isValidUrl(String url){
+        try{
+            new URL(url).toURI();
+            return true;
+        } catch (URISyntaxException | MalformedURLException e) {
+            return false;
+        }
     }
 
 }
