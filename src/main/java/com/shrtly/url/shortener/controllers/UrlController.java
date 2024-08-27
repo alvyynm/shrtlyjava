@@ -38,6 +38,7 @@ public class UrlController {
     @Operation(summary = "Shortens given url", description = "Returns a json with the created resource")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successful url creation operation"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @PostMapping("/shorten")
