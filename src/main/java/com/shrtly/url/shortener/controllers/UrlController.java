@@ -1,5 +1,6 @@
 package com.shrtly.url.shortener.controllers;
 
+import com.shrtly.url.shortener.dtos.UrlDto;
 import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.services.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,9 +41,13 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @PostMapping("/shorten")
-    public Object shortenUrl(@RequestBody Map<String, String> payload) {
-        String originalUrl = payload.get("originalUrl");
-        Url responseData = urlService.createUrl(originalUrl);
+    public Object shortenUrl(@RequestBody UrlDto payload) {
+        // check if originalUrl is present
+        if(payload.getOriginalUrl() == null || payload.getOriginalUrl().isEmpty()) {
+            return new ResponseEntity<>("originalUrl is required", HttpStatus.BAD_REQUEST);
+        }
+
+        Url responseData = urlService.createUrl(payload.getOriginalUrl());
         return new ResponseEntity<>(responseData, HttpStatus.CREATED);
     }
 
