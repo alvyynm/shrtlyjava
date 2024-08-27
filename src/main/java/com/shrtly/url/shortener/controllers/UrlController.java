@@ -45,19 +45,19 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @PostMapping("/shorten")
-    public Object shortenUrl(@RequestBody UrlDto payload) {
+    public ResponseEntity<CommonApiResponse> shortenUrl(@RequestBody UrlDto payload) {
         // check if originalUrl is present
         if(payload.getOriginalUrl() == null || payload.getOriginalUrl().isEmpty()) {
-            return new ResponseEntity<>("originalUrl is required", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CommonApiResponse(false, "originalUrl is required", null), HttpStatus.BAD_REQUEST);
         }
 
         // validate url
         if(!isValidUrl(payload.getOriginalUrl())) {
-            return new ResponseEntity<>("Invalid URL", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new CommonApiResponse(false, "Invalid URL", null), HttpStatus.BAD_REQUEST);
         }
 
         Url responseData = urlService.createUrl(payload.getOriginalUrl());
-        return new ResponseEntity<>(responseData, HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommonApiResponse(true, "Url created successfully", responseData), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get short url by urlId", description = "Returns a json with the resource")
@@ -77,8 +77,13 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @DeleteMapping("/urls/{id}")
-    public String deleteUrl(@Parameter(description = "id of the url to be deleted") @PathVariable Integer id) {
-        return urlService.deleteUrl(id);
+    public ResponseEntity<CommonApiResponse> deleteUrl(@Parameter(description = "id of the url to be deleted") @PathVariable Integer id) {
+        String response = urlService.deleteUrl(id);
+
+        if(response == null) {
+            return new ResponseEntity<>(new CommonApiResponse(false, "Url not found", null), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new CommonApiResponse(true, "Url deleted successfully", urlService.deleteUrl(id)), HttpStatus.OK);
     }
 
     @Operation(summary = "Get all shortened urls", description = "Returns a json with all urls")
@@ -87,8 +92,8 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @GetMapping("/urls")
-    public Iterable<Url> getUrls() {
-        return urlService.getUrls();
+    public ResponseEntity<CommonApiResponse> getUrls() {
+        return new ResponseEntity<>(new CommonApiResponse(true, "All urls found", urlService.getUrls()), HttpStatus.OK);
     }
 
     private boolean isValidUrl(String url){
@@ -100,4 +105,39 @@ public class UrlController {
         }
     }
 
+    public static class CommonApiResponse {
+        private boolean success;
+        private String message;
+        private Object data;
+
+        public CommonApiResponse(boolean success, String message, Object data) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        public Object getData() {
+            return data;
+        }
+
+        public void setData(Object data) {
+            this.data = data;
+        }
+    }
 }
