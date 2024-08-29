@@ -63,6 +63,7 @@ public class UrlController {
     @Operation(summary = "Get short url by urlId", description = "Returns a json with the resource")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the short url"),
+            @ApiResponse(responseCode = "404", description = "Url not found"),
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @GetMapping("/urls/{urlId}")
