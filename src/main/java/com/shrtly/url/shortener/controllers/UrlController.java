@@ -66,8 +66,12 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @GetMapping("/urls/{urlId}")
-    public Url getUrl(@Parameter(description = "urlId of the url to be searched") @PathVariable String urlId) {
-        return urlService.getUrl(urlId);
+    public ResponseEntity<CommonApiResponse> getUrl(@Parameter(description = "urlId of the url to be searched") @PathVariable String urlId) {
+        Url url = urlService.getUrl(urlId);
+        if(url == null) {
+            return new ResponseEntity<>(new CommonApiResponse(false, "Url not found", null), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new CommonApiResponse(true, "Url found", url), HttpStatus.OK);
     }
 
     @Operation(summary = "Delete short url by id", description = "Delete the resource with specified id")
