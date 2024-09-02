@@ -2,6 +2,8 @@ package com.shrtly.url.shortener.controllers;
 
 import com.shrtly.url.shortener.dtos.UrlDto;
 import com.shrtly.url.shortener.models.Url;
+import com.shrtly.url.shortener.models.UrlStat;
+import com.shrtly.url.shortener.repository.UrlStatsRepository;
 import com.shrtly.url.shortener.services.UrlService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,15 +17,18 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping({"/api/v1", "/api/v1/"})
 public class UrlController {
 
     private final UrlService urlService;
+    private final UrlStatsRepository urlStatsRepository;
 
-    public UrlController(UrlService urlService) {
+    public UrlController(UrlService urlService, UrlStatsRepository urlStatsRepository) {
         this.urlService = urlService;
+        this.urlStatsRepository = urlStatsRepository;
     }
 
     @Operation(summary = "Index route for api", description = "Returns a greeting message")
@@ -99,6 +104,16 @@ public class UrlController {
     @GetMapping("/urls")
     public ResponseEntity<CommonApiResponse> getUrls() {
         return new ResponseEntity<>(new CommonApiResponse(true, "All urls found", urlService.getUrls()), HttpStatus.OK);
+    }
+
+    @GetMapping("/urls/{id}/statistics")
+    public ResponseEntity<CommonApiResponse> getStatistics(@PathVariable Integer id) {
+        Iterable<UrlStat> urlStat = urlService.getUrlStats(id);
+        if(urlStat == null) {
+            return null;
+        } else {
+            return new ResponseEntity<>(new CommonApiResponse(true, "Url stats found", urlStat), HttpStatus.OK);
+        }
     }
 
     private boolean isValidUrl(String url){
