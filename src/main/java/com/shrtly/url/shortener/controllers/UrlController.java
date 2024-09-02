@@ -108,7 +108,6 @@ public class UrlController {
     @GetMapping("/urls/{id}/statistics")
     public ResponseEntity<CommonApiResponse> getStatistics(@PathVariable Integer id) {
         Iterable<UrlStat> urlStat = urlService.getUrlStats(id);
-        System.out.println(urlStat);
         if(!urlStat.iterator().hasNext()) {
             return new ResponseEntity<>(new CommonApiResponse(false, "Url has no stats", null), HttpStatus.NOT_FOUND);
         } else {
