@@ -17,7 +17,6 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping({"/api/v1", "/api/v1/"})
