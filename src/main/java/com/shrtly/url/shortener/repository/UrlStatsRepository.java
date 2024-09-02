@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface UrlStatsRepository extends CrudRepository<UrlStat, Integer> {
     List<UrlStat> findByUrlIdAndDate(Integer urlId, LocalDate date);
+
+    Iterable<UrlStat> findByUrlId(Integer urlId);
 }
