@@ -57,8 +57,8 @@ public class UrlService {
         }
     }
 
-    public Optional<UrlStat> getUrlStats(Integer urlId) {
-        return urlStatsRepository.findById(urlId);
+    public Iterable<UrlStat> getUrlStats(Integer urlId) {
+        return urlStatsRepository.findByUrlId(urlId);
     }
 
     private void incrementUrlStatsCount(Integer urlId) {
