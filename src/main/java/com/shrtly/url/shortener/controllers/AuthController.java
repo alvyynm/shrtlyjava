@@ -54,8 +54,8 @@ public class AuthController {
     }
 
     @GetMapping("/auth/users")
-    public String getUsers() {
+    public ResponseEntity<UrlController.CommonApiResponse> getUsers() {
         // TODO: Get all users (ADMIN only)
-        return "users";
+        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "Users found", userService.findAll()), HttpStatus.OK);
     }
 }
