@@ -22,3 +22,6 @@ create table if not exists users (
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ALTER TABLE users
+-- ADD COLUMN status VARCHAR(10);
