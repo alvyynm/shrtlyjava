@@ -14,14 +14,12 @@ create table if not exists urlstats (
 );
 
 create table if not exists users (
-    userId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
-    fullName VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    userRole VARCHAR(10) DEFAULT 'USER',
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_role VARCHAR(10) DEFAULT 'USER',
+    status VARCHAR(10) DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- ALTER TABLE users
--- ADD COLUMN status VARCHAR(10);
