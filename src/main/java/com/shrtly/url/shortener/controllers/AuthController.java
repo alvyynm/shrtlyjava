@@ -47,10 +47,10 @@ public class AuthController {
     }
 
     @GetMapping("/auth/user/{id}")
-    public String getUserDetails(@PathVariable String id) {
+    public ResponseEntity<UrlController.CommonApiResponse> getUserDetails(@PathVariable String id) {
         // TODO: Search for user with given id within db and return their info
         // User must be authenticated
-        return "user";
+        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User found", userService.findById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/auth/users")
