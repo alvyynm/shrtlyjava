@@ -4,6 +4,7 @@ import com.shrtly.url.shortener.dtos.UserSignupDto;
 import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.services.TokenService;
 import com.shrtly.url.shortener.services.UserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public User signup(@RequestBody UserSignupDto userSignupDto) {
+    public User signup(@Valid @RequestBody UserSignupDto userSignupDto) {
         return userService.createUser(userSignupDto);
     }
 
