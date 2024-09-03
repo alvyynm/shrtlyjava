@@ -32,9 +32,8 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public String signup(Authentication authentication) {
-        //TODO: save user details to db and return them
-        return "";
+    public User signup(@RequestBody UserSignupDto userSignupDto) {
+        return userService.createUser(userSignupDto);
     }
 
     @PostMapping("/auth/login")
