@@ -1,6 +1,9 @@
 package com.shrtly.url.shortener.controllers;
 
+import com.shrtly.url.shortener.dtos.UserSignupDto;
+import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.services.TokenService;
+import com.shrtly.url.shortener.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -13,9 +16,11 @@ public class AuthController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthController.class);
 
     private final TokenService tokenService;
+    private final UserService userService;
 
-    public AuthController(TokenService tokenService) {
+    public AuthController(TokenService tokenService, UserService userService) {
         this.tokenService = tokenService;
+        this.userService = userService;
     }
 
     @PostMapping("/token")
