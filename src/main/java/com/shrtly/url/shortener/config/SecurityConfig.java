@@ -38,6 +38,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1").permitAll();
                     auth.requestMatchers("/api/v1/").permitAll();
                     auth.requestMatchers("/{urlId}").permitAll();
+                    auth.requestMatchers("/api/v1/auth/login").permitAll();
+                    auth.requestMatchers("/api/v1/auth/signup").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
