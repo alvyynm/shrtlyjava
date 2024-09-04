@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -27,6 +29,10 @@ public class UserService {
     }
 
     public User createUser(UserSignupDto signupPayload) {
+        Optional<User> existingUser = userRepository.findByEmail(signupPayload.getEmail());
+        if (existingUser.isPresent()) {
+            return null;
+        }
         User newUser = new User();
         System.out.println("Email:" + signupPayload.getEmail());
         newUser.setEmail(signupPayload.getEmail());
