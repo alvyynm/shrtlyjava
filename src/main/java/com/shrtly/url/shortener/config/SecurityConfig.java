@@ -86,6 +86,18 @@ public class SecurityConfig {
         return source;
     }
 
+//    @Bean
+//    JwtDecoder jwtDecoder() {
+//        return NimbusJwtDecoder.withPublicKey(rsaKeyProperties.publicKey()).build();
+//    }
+//
+//    @Bean
+//    JwtEncoder jwtEncoder() {
+//        JWK jwk = new RSAKey.Builder(rsaKeyProperties.publicKey()).privateKey(rsaKeyProperties.privateKey()).build();
+//        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+//        return new NimbusJwtEncoder(jwks);
+//    }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         // Allows h2-console to be accessed
