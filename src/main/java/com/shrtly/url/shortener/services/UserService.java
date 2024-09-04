@@ -62,4 +62,10 @@ public class UserService {
         user.setPassword(password);
         return userRepository.save(user);
     }
+
+    public User login(LoginUserDto loginPayload) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginPayload.getEmail(), loginPayload.getPassword()));
+
+        return userRepository.findByEmail(loginPayload.getEmail()).orElseThrow();
+    }
 }
