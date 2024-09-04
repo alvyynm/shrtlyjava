@@ -1,17 +1,25 @@
 package com.shrtly.url.shortener.services;
 
+import com.shrtly.url.shortener.dtos.LoginUserDto;
 import com.shrtly.url.shortener.dtos.UserSignupDto;
 import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.repository.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     public Iterable<User> findAll() {
@@ -22,7 +30,7 @@ public class UserService {
         User newUser = new User();
         System.out.println("Email:" + signupPayload.getEmail());
         newUser.setEmail(signupPayload.getEmail());
-        newUser.setPassword(signupPayload.getPassword());
+        newUser.setPassword(passwordEncoder.encode(signupPayload.getPassword()));
         newUser.setFullName(signupPayload.getFullName());
         newUser.setStatus("active");
         newUser.setUserRole("USER");
