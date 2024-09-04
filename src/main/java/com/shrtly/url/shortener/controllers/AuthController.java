@@ -28,13 +28,14 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<UrlController.CommonApiResponse> signup(@Valid @RequestBody UserSignupDto userSignupDto) {
+    public ResponseEntity<SignupResponse> signup(@Valid @RequestBody UserSignupDto userSignupDto) {
         User newUser = userService.createUser(userSignupDto);
 
         if(newUser == null) {
-            return new ResponseEntity<>(new UrlController.CommonApiResponse(false, "Invalid email address", null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new SignupResponse(false, "Invalid email address", null), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User created successfully", newUser), HttpStatus.CREATED);
+
+        return new ResponseEntity<>(new SignupResponse(true, "User created successfully", newUser), HttpStatus.CREATED);
     }
 
     @PostMapping("/auth/login")
@@ -111,5 +112,41 @@ class LoginResponse {
 
     public void setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
+    }
+}
+
+class SignupResponse {
+    private boolean success;
+    private String message;
+    private Object data;
+
+    public SignupResponse(boolean success, String message, Object data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }
