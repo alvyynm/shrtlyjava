@@ -1,7 +1,15 @@
 package com.shrtly.url.shortener.dtos;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+
 public class LoginUserDto {
+    @Email
+    @NotEmpty
     private String email;
+
+    @NotEmpty
     private String password;
 
     public String getEmail() {
