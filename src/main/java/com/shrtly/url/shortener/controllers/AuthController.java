@@ -29,7 +29,12 @@ public class AuthController {
 
     @PostMapping("/auth/signup")
     public ResponseEntity<UrlController.CommonApiResponse> signup(@Valid @RequestBody UserSignupDto userSignupDto) {
-        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User created successfully", userService.createUser(userSignupDto)), HttpStatus.CREATED);
+        User newUser = userService.createUser(userSignupDto);
+
+        if(newUser == null) {
+            return new ResponseEntity<>(new UrlController.CommonApiResponse(false, "Invalid email address", null), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User created successfully", newUser), HttpStatus.CREATED);
     }
 
     @PostMapping("/auth/login")
