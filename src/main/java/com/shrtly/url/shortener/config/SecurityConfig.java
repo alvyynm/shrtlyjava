@@ -8,6 +8,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
@@ -19,18 +20,28 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SecurityConfig {
 
-    private final RsaKeyProperties rsaKeyProperties;
+//    private final RsaKeyProperties rsaKeyProperties;
+    private final AuthenticationProvider authenticationProvider;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(RsaKeyProperties rsaKeyProperties) {
-        this.rsaKeyProperties = rsaKeyProperties;
+    public SecurityConfig(AuthenticationProvider authenticationProvider, JwtAuthenticationFilter jwtAuthenticationFilter) {
+//        this.rsaKeyProperties = rsaKeyProperties;
+        this.authenticationProvider = authenticationProvider;
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     @Bean
@@ -44,8 +55,10 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/auth/signup").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+//                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(withDefaults()
                 ).build();
     }
