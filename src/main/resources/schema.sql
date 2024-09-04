@@ -15,7 +15,7 @@ create table if not exists urlstats (
 
 create table if not exists users (
     user_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
     full_name VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     user_role VARCHAR(10) DEFAULT 'USER',
