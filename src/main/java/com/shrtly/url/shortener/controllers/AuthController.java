@@ -34,7 +34,6 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginUserDto loginUserDto) {
-        // TODO: authenticate user and return jwt session
         User loggedInUser = userService.login(loginUserDto);
 
         String jwtToken = jwtService.generateToken(loggedInUser);
