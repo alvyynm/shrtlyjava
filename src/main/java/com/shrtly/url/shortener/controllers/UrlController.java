@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,17 +50,7 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @PostMapping("/shorten")
-    public ResponseEntity<CommonApiResponse> shortenUrl(@RequestBody UrlDto payload) {
-        // check if originalUrl is present
-        if(payload.getOriginalUrl() == null || payload.getOriginalUrl().isEmpty()) {
-            return new ResponseEntity<>(new CommonApiResponse(false, "originalUrl is required", null), HttpStatus.BAD_REQUEST);
-        }
-
-        // validate url
-        if(!isValidUrl(payload.getOriginalUrl())) {
-            return new ResponseEntity<>(new CommonApiResponse(false, "Invalid URL", null), HttpStatus.BAD_REQUEST);
-        }
-
+    public ResponseEntity<CommonApiResponse> shortenUrl(@Valid @RequestBody UrlDto payload) {
         Url responseData = urlService.createUrl(payload.getOriginalUrl());
         return new ResponseEntity<>(new CommonApiResponse(true, "Url created successfully", responseData), HttpStatus.CREATED);
     }
@@ -112,15 +103,6 @@ public class UrlController {
             return new ResponseEntity<>(new CommonApiResponse(false, "Url has no stats", null), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(new CommonApiResponse(true, "Url stats found", urlStat), HttpStatus.OK);
-        }
-    }
-
-    private boolean isValidUrl(String url){
-        try{
-            new URL(url).toURI();
-            return true;
-        } catch (URISyntaxException | MalformedURLException e) {
-            return false;
         }
     }
 
