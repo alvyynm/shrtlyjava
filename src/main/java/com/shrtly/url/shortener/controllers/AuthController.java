@@ -52,19 +52,6 @@ public class AuthController {
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
     }
-
-    @GetMapping("/auth/users/{id}")
-    public ResponseEntity<UrlController.CommonApiResponse> getUserDetails(@PathVariable Integer id) {
-        // TODO: Search for user with given id within db and return their info
-        // User must be authenticated
-        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User found", userService.findById(id)), HttpStatus.OK);
-    }
-
-    @GetMapping("/auth/users")
-    public ResponseEntity<UrlController.CommonApiResponse> getUsers() {
-        // TODO: Get all users (ADMIN only)
-        return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "Users found", userService.findAll()), HttpStatus.OK);
-    }
 }
 
 class LoginResponse {
