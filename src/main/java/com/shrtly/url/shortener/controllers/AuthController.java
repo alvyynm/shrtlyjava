@@ -86,8 +86,12 @@ class LoginResponse {
     private boolean status;
     private String message;
     private String data;
-    private String token;
-    private long expiresIn;
+
+    public LoginResponse(boolean status, String message, String data, String token, long expiresIn) {
+        this.status = status;
+        this.message = message;
+        this.data = data;
+    }
 
     public boolean getStatus() {
         return status;
@@ -111,22 +115,6 @@ class LoginResponse {
 
     public void setData(String data) {
         this.data = data;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public long getExpiresIn() {
-        return expiresIn;
-    }
-
-    public void setExpiresIn(long expiresIn) {
-        this.expiresIn = expiresIn;
     }
 }
 
