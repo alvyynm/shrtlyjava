@@ -26,8 +26,6 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/auth/users/{id}")
     public ResponseEntity<UrlController.CommonApiResponse> getUserDetails(@PathVariable Integer id) {
-        // TODO: Search for user with given id within db and return their info
-        // User must be authenticated
         return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User found", userService.findById(id)), HttpStatus.OK);
     }
 
