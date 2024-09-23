@@ -34,7 +34,6 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/auth/users")
     public ResponseEntity<UrlController.CommonApiResponse> getUsers() {
-        // TODO: Get all users (ADMIN only)
         return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "Users found", userService.findAll()), HttpStatus.OK);
     }
 
