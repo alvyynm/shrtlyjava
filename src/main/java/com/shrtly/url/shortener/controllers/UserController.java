@@ -4,6 +4,7 @@ import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,16 +30,10 @@ public class UserController {
         return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "User found", userService.findById(id)), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/auth/users")
     public ResponseEntity<UrlController.CommonApiResponse> getUsers() {
         // TODO: Get all users (ADMIN only)
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        User currentUser = (User) authentication.getPrincipal();
-
-        if (!Objects.equals(currentUser.getUserRole(), "ADMIN")){
-            return new ResponseEntity<>(new UrlController.CommonApiResponse(false, "Unauthorized", null), HttpStatus.FORBIDDEN);
-        }
         return new ResponseEntity<>(new UrlController.CommonApiResponse(true, "Users found", userService.findAll()), HttpStatus.OK);
     }
 
