@@ -153,9 +153,9 @@ class SignupResponse {
 class UserDetailsResponse {
     private boolean success;
     private String message;
-    private Object data;
+    private UserDetailsResponseDTO data;
 
-    public UserDetailsResponse(boolean success, String message, Object data) {
+    public UserDetailsResponse(boolean success, String message, UserDetailsResponseDTO data) {
         this.success = success;
         this.message = message;
         this.data = data;
@@ -177,11 +177,11 @@ class UserDetailsResponse {
         this.message = message;
     }
 
-    public Object getData() {
+    public UserDetailsResponseDTO getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(UserDetailsResponseDTO data) {
         this.data = data;
     }
 }
