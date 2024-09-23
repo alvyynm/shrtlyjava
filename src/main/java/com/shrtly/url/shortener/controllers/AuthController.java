@@ -1,6 +1,7 @@
 package com.shrtly.url.shortener.controllers;
 
 import com.shrtly.url.shortener.dtos.LoginUserDto;
+import com.shrtly.url.shortener.dtos.UserDetailsDTO;
 import com.shrtly.url.shortener.dtos.UserSignupDto;
 import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.services.JwtService;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -51,6 +53,23 @@ public class AuthController {
         loginResponse.setData(null);
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
         return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/auth/me")
+    public ResponseEntity<UserDetailsResponse> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        User currentUser = (User) authentication.getPrincipal();
+
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+                currentUser.getUserId(),
+                currentUser.getUsername(),
+                currentUser.getEmail(),
+                currentUser.getUserRole(),
+                currentUser.getFullName()
+        );
+//        System.out.println("User " + currentUser);
+        return new ResponseEntity<>(new UserDetailsResponse(true, "user details found", userDetailsDTO), HttpStatus.OK);
     }
 }
 
@@ -108,6 +127,43 @@ class SignupResponse {
     private Object data;
 
     public SignupResponse(boolean success, String message, Object data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+}
+
+
+class UserDetailsResponse {
+    private boolean success;
+    private String message;
+    private Object data;
+
+    public UserDetailsResponse(boolean success, String message, Object data) {
         this.success = success;
         this.message = message;
         this.data = data;
