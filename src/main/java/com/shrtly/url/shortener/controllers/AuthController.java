@@ -116,9 +116,9 @@ class LoginResponse {
 class SignupResponse {
     private boolean success;
     private String message;
-    private Object data;
+    private SignupResponseDTO data;
 
-    public SignupResponse(boolean success, String message, Object data) {
+    public SignupResponse(boolean success, String message, SignupResponseDTO data) {
         this.success = success;
         this.message = message;
         this.data = data;
@@ -140,11 +140,11 @@ class SignupResponse {
         this.message = message;
     }
 
-    public Object getData() {
+    public SignupResponseDTO  getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(SignupResponseDTO  data) {
         this.data = data;
     }
 }
