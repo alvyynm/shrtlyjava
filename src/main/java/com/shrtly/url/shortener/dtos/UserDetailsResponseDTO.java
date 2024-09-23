@@ -1,13 +1,13 @@
 package com.shrtly.url.shortener.dtos;
 
-public class UserDetailsDTO {
+public class UserDetailsResponseDTO {
     private Integer userId;
     private String username;
     private String email;
     private String userRole;
     private String fullName;
 
-    public UserDetailsDTO(Integer userId, String username, String email, String userRole, String fullName) {
+    public UserDetailsResponseDTO(Integer userId, String username, String email, String userRole, String fullName) {
         this.userId = userId;
         this.username = username;
         this.email = email;

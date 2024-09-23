@@ -65,7 +65,7 @@ public class AuthController {
 
         User currentUser = (User) authentication.getPrincipal();
 
-        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(
+        UserDetailsResponseDTO userDetailsDTO = new UserDetailsResponseDTO(
                 currentUser.getUserId(),
                 currentUser.getUsername(),
                 currentUser.getEmail(),
