@@ -23,6 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/auth/users/{id}")
     public ResponseEntity<UrlController.CommonApiResponse> getUserDetails(@PathVariable Integer id) {
         // TODO: Search for user with given id within db and return their info
