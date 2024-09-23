@@ -1,9 +1,6 @@
 package com.shrtly.url.shortener.controllers;
 
-import com.shrtly.url.shortener.dtos.LoginUserDto;
-import com.shrtly.url.shortener.dtos.SignupResponseDTO;
-import com.shrtly.url.shortener.dtos.UserDetailsDTO;
-import com.shrtly.url.shortener.dtos.UserSignupDto;
+import com.shrtly.url.shortener.dtos.*;
 import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.services.JwtService;
 import com.shrtly.url.shortener.services.UserService;
@@ -54,14 +51,12 @@ public class AuthController {
         User loggedInUser = userService.login(loginUserDto);
 
         String jwtToken = jwtService.generateToken(loggedInUser);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setStatus(true);
-        loginResponse.setData(null);
-        loginResponse.setMessage("Successfully logged in");
-        loginResponse.setToken(jwtToken);
-        loginResponse.setData(null);
-        loginResponse.setExpiresIn(jwtService.getExpirationTime());
-        return new ResponseEntity<>(loginResponse, HttpStatus.OK);
+
+        LoginResponseDTO loginResponseDTO = new LoginResponseDTO(
+                jwtToken,
+                jwtService.getExpirationTime()
+        );
+        return new ResponseEntity<>(new LoginResponse(true, "Successfully logged in", loginResponseDTO), HttpStatus.OK);
     }
 
     @GetMapping("/auth/me")
@@ -85,9 +80,9 @@ public class AuthController {
 class LoginResponse {
     private boolean status;
     private String message;
-    private String data;
+    private LoginResponseDTO data;
 
-    public LoginResponse(boolean status, String message, String data, String token, long expiresIn) {
+    public LoginResponse(boolean status, String message, LoginResponseDTO data) {
         this.status = status;
         this.message = message;
         this.data = data;
@@ -109,11 +104,11 @@ class LoginResponse {
         this.message = message;
     }
 
-    public String getData() {
+    public LoginResponseDTO getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(LoginResponseDTO data) {
         this.data = data;
     }
 }
