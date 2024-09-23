@@ -1,6 +1,7 @@
 package com.shrtly.url.shortener.controllers;
 
 import com.shrtly.url.shortener.dtos.LoginUserDto;
+import com.shrtly.url.shortener.dtos.SignupResponseDTO;
 import com.shrtly.url.shortener.dtos.UserDetailsDTO;
 import com.shrtly.url.shortener.dtos.UserSignupDto;
 import com.shrtly.url.shortener.models.User;
@@ -37,7 +38,15 @@ public class AuthController {
             return new ResponseEntity<>(new SignupResponse(false, "Invalid email address", null), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>(new SignupResponse(true, "User created successfully", newUser), HttpStatus.CREATED);
+        SignupResponseDTO signupResponseDTO = new SignupResponseDTO(
+                newUser.getUserId(),
+                newUser.getUsername(),
+                newUser.getEmail(),
+                newUser.getUserRole(),
+                newUser.getFullName()
+        );
+
+        return new ResponseEntity<>(new SignupResponse(true, "User created successfully", signupResponseDTO), HttpStatus.CREATED);
     }
 
     @PostMapping("/auth/login")
