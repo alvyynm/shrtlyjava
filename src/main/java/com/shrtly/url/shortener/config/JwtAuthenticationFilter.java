@@ -36,9 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Send 401 Unauthorized if missing or malformed token
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Authorization header missing or invalid\"}");
+            // Continue the filter chain if no token is provided
+            filterChain.doFilter(request, response);
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Send 401 Unauthorized if missing or malformed token
+//            response.setContentType("application/json");
+//            response.getWriter().write("{\"error\": \"Authorization header missing or invalid\"}");
             // Prevent further processing of the request
             return;
         }
@@ -60,13 +62,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
             }
 
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // Continue the filter chain if valid token
         } catch (Exception e) {
             // Handle token-related exceptions and return a 401 Unauthorized with a proper message
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\": \"Invalid or expired token\"}");
-            //            handlerExceptionResolver.resolveException(request, response, null, e);
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//            response.setContentType("application/json");
+//            response.getWriter().write("{\"error\": \"Invalid or expired token\"}");
+            handlerExceptionResolver.resolveException(request, response, null, e);
         }
 
     }
