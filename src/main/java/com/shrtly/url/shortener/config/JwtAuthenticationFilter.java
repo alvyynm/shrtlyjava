@@ -36,7 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Send 401 Unauthorized if missing or malformed token
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Authorization header missing or invalid\"}");
+            // Prevent further processing of the request
             return;
         }
 
