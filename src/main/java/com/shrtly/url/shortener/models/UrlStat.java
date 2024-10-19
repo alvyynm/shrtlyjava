@@ -1,13 +1,19 @@
 package com.shrtly.url.shortener.models;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
-@Table("URLSTATS")
+@Entity
+@Table(name = "URLSTATS")
 public class UrlStat {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generate ID
     private Integer id;
 
     private Integer urlId;
@@ -16,12 +22,17 @@ public class UrlStat {
 
     private Integer clickCount;
 
+    // Constructors
+    public UrlStat() {
+    }
+
     public UrlStat(Integer urlId, LocalDate date, Integer clickCount) {
         this.urlId = urlId;
         this.date = date;
         this.clickCount = clickCount;
     }
 
+    // Getters and setters
     public Integer getId() {
         return id;
     }

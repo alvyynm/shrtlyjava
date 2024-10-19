@@ -1,12 +1,18 @@
 package com.shrtly.url.shortener.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
 
-@Table("URLS")
+@Entity
+@Table(name = "URLS")
 public class Url {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // For auto-increment behavior
     private Integer id;
 
     private String urlId;
@@ -16,6 +22,7 @@ public class Url {
 
     private String shortenedUrl;
 
+    // Getters and Setters
     public String getUrlId() {
         return urlId;
     }
