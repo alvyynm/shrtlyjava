@@ -13,16 +13,18 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<?> handleJwtException(JwtException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid or expired token"));
+    public ResponseEntity<StandardApiResponse> handleJwtException(JwtException ex) {
+        StandardApiResponse response = new StandardApiResponse(false, "Invalid or expired token", null);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     // Handle generic authentication exceptions
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
+        StandardApiResponse response = new StandardApiResponse(false, "Unauthorized access", null);
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "Unauthorized access: " + ex.getMessage()));
+                .body(response);
     }
 
     @ExceptionHandler(UrlNotFoundException.class)
@@ -32,8 +34,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
-                body(Map.of("error", "An error occurred: " + ex.getMessage()));
+    public ResponseEntity<StandardApiResponse> handleGenericException(Exception ex) {
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).
+//                body(Map.of("error", "An error occurred: " + ex.getMessage()));
+        StandardApiResponse response = new StandardApiResponse(false, "An error occurred", null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
