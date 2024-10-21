@@ -4,6 +4,7 @@ import com.shrtly.url.shortener.dtos.*;
 import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.services.JwtService;
 import com.shrtly.url.shortener.services.UserService;
+import com.shrtly.url.shortener.utils.StandardApiResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,11 @@ public class AuthController {
     }
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<SignupResponse> signup(@Valid @RequestBody UserSignupDto userSignupDto) {
+    public ResponseEntity<StandardApiResponse<SignupResponseDTO>> signup(@Valid @RequestBody UserSignupDto userSignupDto) {
         User newUser = userService.createUser(userSignupDto);
 
         if(newUser == null) {
-            return new ResponseEntity<>(new SignupResponse(false, "Invalid email address", null), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new StandardApiResponse<>(false, "Invalid email address", null), HttpStatus.BAD_REQUEST);
         }
 
         SignupResponseDTO signupResponseDTO = new SignupResponseDTO(
@@ -43,11 +44,11 @@ public class AuthController {
                 newUser.getFullName()
         );
 
-        return new ResponseEntity<>(new SignupResponse(true, "User created successfully", signupResponseDTO), HttpStatus.CREATED);
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "User created successfully", signupResponseDTO), HttpStatus.CREATED);
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginUserDto loginUserDto) {
+    public ResponseEntity<StandardApiResponse<LoginResponseDTO>> login(@Valid @RequestBody LoginUserDto loginUserDto) {
         User loggedInUser = userService.login(loginUserDto);
 
         String jwtToken = jwtService.generateToken(loggedInUser);
@@ -56,11 +57,11 @@ public class AuthController {
                 jwtToken,
                 jwtService.getExpirationTime()
         );
-        return new ResponseEntity<>(new LoginResponse(true, "Successfully logged in", loginResponseDTO), HttpStatus.OK);
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "Successfully logged in", loginResponseDTO), HttpStatus.OK);
     }
 
     @GetMapping("/auth/me")
-    public ResponseEntity<UserDetailsResponse> getCurrentUser() {
+    public ResponseEntity<StandardApiResponse<UserDetailsResponseDTO>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         User currentUser = (User) authentication.getPrincipal();
@@ -73,115 +74,6 @@ public class AuthController {
                 currentUser.getFullName()
         );
 //        System.out.println("User " + currentUser);
-        return new ResponseEntity<>(new UserDetailsResponse(true, "user details found", userDetailsDTO), HttpStatus.OK);
-    }
-}
-
-class LoginResponse {
-    private boolean status;
-    private String message;
-    private LoginResponseDTO data;
-
-    public LoginResponse(boolean status, String message, LoginResponseDTO data) {
-        this.status = status;
-        this.message = message;
-        this.data = data;
-    }
-
-    public boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public LoginResponseDTO getData() {
-        return data;
-    }
-
-    public void setData(LoginResponseDTO data) {
-        this.data = data;
-    }
-}
-
-class SignupResponse {
-    private boolean success;
-    private String message;
-    private SignupResponseDTO data;
-
-    public SignupResponse(boolean success, String message, SignupResponseDTO data) {
-        this.success = success;
-        this.message = message;
-        this.data = data;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public SignupResponseDTO  getData() {
-        return data;
-    }
-
-    public void setData(SignupResponseDTO  data) {
-        this.data = data;
-    }
-}
-
-
-class UserDetailsResponse {
-    private boolean success;
-    private String message;
-    private UserDetailsResponseDTO data;
-
-    public UserDetailsResponse(boolean success, String message, UserDetailsResponseDTO data) {
-        this.success = success;
-        this.message = message;
-        this.data = data;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public UserDetailsResponseDTO getData() {
-        return data;
-    }
-
-    public void setData(UserDetailsResponseDTO data) {
-        this.data = data;
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "user details found", userDetailsDTO), HttpStatus.OK);
     }
 }
