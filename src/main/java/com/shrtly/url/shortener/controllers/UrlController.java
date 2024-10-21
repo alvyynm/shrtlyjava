@@ -84,13 +84,13 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @DeleteMapping("/urls/{id}")
-    public ResponseEntity<CommonApiResponse> deleteUrl(@Parameter(description = "id of the url to be deleted") @PathVariable Integer id) {
+    public ResponseEntity<StandardApiResponse<?>> deleteUrl(@Parameter(description = "id of the url to be deleted") @PathVariable Integer id) {
         String response = urlService.deleteUrl(id);
 
         if(response == null) {
-            return new ResponseEntity<>(new CommonApiResponse(false, "Url not found", null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new StandardApiResponse<>(false, "Url not found", null), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(new CommonApiResponse(true, "Url deleted successfully", urlService.deleteUrl(id)), HttpStatus.OK);
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "Url deleted successfully", urlService.deleteUrl(id)), HttpStatus.OK);
     }
 
     @Operation(summary = "Get all shortened urls", description = "Returns a json with all urls")
