@@ -36,12 +36,13 @@ public class UrlService {
         return urlRepository.findAll();
     }
 
-    public Url getUrl(String urlId) {
+    public UrlResponseDTO getUrl(String urlId) {
         Url url = urlRepository.findByUrlId(urlId);
+
         if (url != null) {
             incrementUrlStatsCount(url.getId());
         }
-        return url;
+        return new UrlResponseDTO(url.getId(), url.getUrlId(), url.getOriginalUrl(), url.getShortenedUrl(), url.getUser().getUserId());
     }
 
     public UrlResponseDTO createUrl(String originalUrl) {

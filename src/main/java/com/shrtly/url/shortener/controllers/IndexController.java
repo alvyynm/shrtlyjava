@@ -1,5 +1,6 @@
 package com.shrtly.url.shortener.controllers;
 
+import com.shrtly.url.shortener.dtos.UrlResponseDTO;
 import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.services.UrlService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public class IndexController {
 
     @GetMapping("/{urlId}")
     public RedirectView getOriginalUrl(@PathVariable String urlId) {
-        Url url = urlService.getUrl(urlId);
+        UrlResponseDTO url = urlService.getUrl(urlId);
         if(url == null) {
             return null;
 
