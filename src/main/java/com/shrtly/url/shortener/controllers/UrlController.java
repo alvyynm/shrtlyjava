@@ -1,6 +1,7 @@
 package com.shrtly.url.shortener.controllers;
 
 import com.shrtly.url.shortener.dtos.UrlDto;
+import com.shrtly.url.shortener.dtos.UrlResponseDTO;
 import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.models.UrlStat;
 import com.shrtly.url.shortener.repository.UrlStatsRepository;
@@ -52,7 +53,7 @@ public class UrlController {
     })
     @PostMapping("/shorten")
     public ResponseEntity<CommonApiResponse> shortenUrl(@Valid @RequestBody UrlDto payload) {
-        Url responseData = urlService.createUrl(payload.getOriginalUrl());
+        UrlResponseDTO responseData = urlService.createUrl(payload.getOriginalUrl());
         return new ResponseEntity<>(new CommonApiResponse(true, "Url created successfully", responseData), HttpStatus.CREATED);
     }
 
