@@ -60,6 +60,12 @@ public class AuthController {
         return new ResponseEntity<>(new StandardApiResponse<>(true, "Successfully logged in", loginResponseDTO), HttpStatus.OK);
     }
 
+    @PostMapping("/auth/logout")
+    public ResponseEntity<StandardApiResponse<?>> logout() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "Successfully logged out", null), HttpStatus.OK);
+    }
+
     @GetMapping("/auth/me")
     public ResponseEntity<StandardApiResponse<UserDetailsResponseDTO>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
