@@ -1,6 +1,8 @@
 package com.shrtly.url.shortener.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shrtly.url.shortener.services.JwtService;
+import com.shrtly.url.shortener.utils.StandardApiResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,8 +38,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // Continue the filter chain if no token is provided
-            filterChain.doFilter(request, response);
+            // If the header is missing or doesn't start with Bearer, return 401 with a message
+
+            StandardApiResponse<?> Apiresponse = new StandardApiResponse<>(false, "Invalid or missing Authorization header", null);
+
+            writeApiResponse(response, Apiresponse, HttpServletResponse.SC_UNAUTHORIZED);
             // Prevent further processing of the request
             return;
         }
@@ -65,5 +70,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             handlerExceptionResolver.resolveException(request, response, null, e);
         }
 
+    }
+
+    private void writeApiResponse(HttpServletResponse response, StandardApiResponse<?> apiResponse, int status) throws IOException {
+        //  converts the ApiResponse object to JSON using ObjectMapper (from Jackson) and writes it to the response
+        response.setStatus(status);
+        response.setContentType("application/json");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(apiResponse));
     }
 }
