@@ -11,7 +11,7 @@ public class SignupResponseDTO {
         this.userId = userId;
         this.username = username;
         this.email = email;
-        this.userRole = userRole;
+//        this.userRole = userRole;
         this.fullName = fullName;
     }
 
@@ -39,13 +39,13 @@ public class SignupResponseDTO {
         this.email = email;
     }
 
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
-    }
+//    public String getUserRole() {
+//        return userRole;
+//    }
+//
+//    public void setUserRole(String userRole) {
+//        this.userRole = userRole;
+//    }
 
     public String getFullName() {
         return fullName;
