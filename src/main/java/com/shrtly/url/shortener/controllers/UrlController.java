@@ -6,6 +6,7 @@ import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.models.UrlStat;
 import com.shrtly.url.shortener.repository.UrlStatsRepository;
 import com.shrtly.url.shortener.services.UrlService;
+import com.shrtly.url.shortener.utils.StandardApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -52,9 +53,10 @@ public class UrlController {
             @ApiResponse(responseCode = "405", description = "Unsupported HTTP method")
     })
     @PostMapping("/shorten")
-    public ResponseEntity<CommonApiResponse> shortenUrl(@Valid @RequestBody UrlDto payload) {
+    public ResponseEntity<StandardApiResponse<UrlResponseDTO>> shortenUrl(@Valid @RequestBody UrlDto payload) {
         UrlResponseDTO responseData = urlService.createUrl(payload.getOriginalUrl());
-        return new ResponseEntity<>(new CommonApiResponse(true, "Url created successfully", responseData), HttpStatus.CREATED);
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "Url created successfully", responseData),
+                HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get short url by urlId", description = "Returns a json with the resource")
