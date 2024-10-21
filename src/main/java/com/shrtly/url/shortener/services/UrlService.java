@@ -14,8 +14,10 @@ import org.springframework.stereotype.Service;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UrlService {
@@ -33,8 +35,18 @@ public class UrlService {
         this.userRepository = userRepository;
     }
 
-    public Iterable<Url> getUrls() {
-        return urlRepository.findAll();
+    public List<UrlResponseDTO> getUrls() {
+        Iterable<Url> urls = urlRepository.findAll();
+        List<UrlResponseDTO> urlResponseDTOs = StreamSupport.stream(urls.spliterator(), false)
+                .map(url -> new UrlResponseDTO(
+                        url.getId(),
+                        url.getUrlId(),
+                        url.getOriginalUrl(),
+                        url.getShortenedUrl(),
+                        url.getUser().getUserId()))
+                .collect(Collectors.toList());
+        urls.forEach(url -> {});
+        return urlResponseDTOs;
     }
 
     public UrlResponseDTO getUrl(String urlId) {

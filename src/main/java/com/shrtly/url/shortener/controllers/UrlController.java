@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping({"/api/v1", "/api/v1/"})
@@ -97,8 +100,10 @@ public class UrlController {
     })
     @GetMapping("/urls")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CommonApiResponse> getUrls() {
-        return new ResponseEntity<>(new CommonApiResponse(true, "All urls found", urlService.getUrls()), HttpStatus.OK);
+    public ResponseEntity<StandardApiResponse<Iterable<UrlResponseDTO>>> getUrls() {
+        List<UrlResponseDTO> urls = urlService.getUrls();
+
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "All urls found", urls), HttpStatus.OK);
     }
 
     @GetMapping("/urls/{id}/statistics")
