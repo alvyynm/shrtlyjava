@@ -1,5 +1,6 @@
 package com.shrtly.url.shortener.exceptions;
 
+import com.shrtly.url.shortener.utils.StandardApiResponse;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Unauthorized access: " + ex.getMessage()));
+    }
+
+    @ExceptionHandler(UrlNotFoundException.class)
+    public ResponseEntity<StandardApiResponse> handleUrlNotFoundException(UrlNotFoundException ex) {
+        StandardApiResponse response = new StandardApiResponse(false, ex.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(Exception.class)
