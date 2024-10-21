@@ -1,6 +1,7 @@
 package com.shrtly.url.shortener.services;
 
 import com.shrtly.url.shortener.dtos.UrlResponseDTO;
+import com.shrtly.url.shortener.exceptions.UrlNotFoundException;
 import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.models.UrlStat;
 import com.shrtly.url.shortener.models.User;
@@ -39,9 +40,12 @@ public class UrlService {
     public UrlResponseDTO getUrl(String urlId) {
         Url url = urlRepository.findByUrlId(urlId);
 
-        if (url != null) {
-            incrementUrlStatsCount(url.getId());
+        if (url == null) {
+           throw new UrlNotFoundException("URL not found for ID: " + urlId);
         }
+
+        incrementUrlStatsCount(url.getId());
+
         return new UrlResponseDTO(url.getId(), url.getUrlId(), url.getOriginalUrl(), url.getShortenedUrl(), url.getUser().getUserId());
     }
 
