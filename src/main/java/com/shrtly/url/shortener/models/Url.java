@@ -1,10 +1,6 @@
 package com.shrtly.url.shortener.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
@@ -21,6 +17,11 @@ public class Url {
     private String originalUrl;
 
     private String shortenedUrl;
+
+    // Many URLs belong to one user
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    private User user;
 
     // Getters and Setters
     public String getUrlId() {
@@ -49,5 +50,13 @@ public class Url {
 
     public void setShortenedUrl(String shortenedUrl) {
         this.shortenedUrl = shortenedUrl;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
