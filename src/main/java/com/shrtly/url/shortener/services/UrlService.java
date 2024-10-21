@@ -1,9 +1,14 @@
 package com.shrtly.url.shortener.services;
 
+import com.shrtly.url.shortener.dtos.UrlResponseDTO;
 import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.models.UrlStat;
+import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.repository.UrlRepository;
 import com.shrtly.url.shortener.repository.UrlStatsRepository;
+import com.shrtly.url.shortener.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import com.aventrix.jnanoid.jnanoid.NanoIdUtils;
 
@@ -19,10 +24,12 @@ public class UrlService {
     private static final int ID_LENGTH = 6;
     private final UrlRepository urlRepository;
     private final UrlStatsRepository urlStatsRepository;
+    private final UserRepository userRepository;
 
-    public UrlService(UrlRepository urlRepository, UrlStatsRepository urlStatsRepository) {
+    public UrlService(UrlRepository urlRepository, UrlStatsRepository urlStatsRepository, UserRepository userRepository) {
         this.urlRepository = urlRepository;
         this.urlStatsRepository = urlStatsRepository;
+        this.userRepository = userRepository;
     }
 
     public Iterable<Url> getUrls() {
@@ -37,14 +44,25 @@ public class UrlService {
         return url;
     }
 
-    public Url createUrl(String originalUrl) {
+    public UrlResponseDTO createUrl(String originalUrl) {
+        // Retrieve the authenticated user's email from the SecurityContext
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Find the user in db using the email
+        User currentUser = userRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> new IllegalArgumentException("Invalid user email"));
+
+        // Create a new Url entity and set the necessary fields
         Url url = new Url();
         String newUrlId = NanoIdUtils.randomNanoId(NanoIdUtils.DEFAULT_NUMBER_GENERATOR, ALPHABET, ID_LENGTH);
         url.setOriginalUrl(originalUrl);
         url.setUrlId(newUrlId);
         url.setShortenedUrl("http://localhost:8080/" + newUrlId);
+
+        // Set the user on the Url entity (establish the relationship)
+        url.setUser(currentUser);
+
         urlRepository.save(url);
-        return url;
+        return new UrlResponseDTO(url.getId(), url.getUrlId(), url.getOriginalUrl(), url.getShortenedUrl(), url.getUser().getUserId());
     }
 
     public String deleteUrl(Integer id) {
