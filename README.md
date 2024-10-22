@@ -7,6 +7,6 @@ This project is a simple URL shortening service.
 
 ## Tech Stack
 - Maven for dependency mgmt
-- Spring Boot / Data (JDBC) / Security
+- Spring Boot / JPA (with Hibernate) / Security
 - SpringDoc for OpenApi documentation
 - XML-based config (for global props) mixed with annotations
