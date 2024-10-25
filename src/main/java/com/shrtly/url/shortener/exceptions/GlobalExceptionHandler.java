@@ -4,6 +4,7 @@ import com.shrtly.url.shortener.utils.StandardApiResponse;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,6 +45,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<StandardApiResponse> handleUrlNotFoundException(UrlNotFoundException ex) {
         StandardApiResponse response = new StandardApiResponse(false, ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardApiResponse<?>> handleAccessDeniedException(AccessDeniedException ex) {
+        StandardApiResponse<?> response = new StandardApiResponse<>(false, ex.getMessage(), null);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
     @ExceptionHandler(Exception.class)
