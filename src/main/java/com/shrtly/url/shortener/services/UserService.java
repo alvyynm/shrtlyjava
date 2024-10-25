@@ -32,7 +32,7 @@ public class UserService {
         this.authenticationProvider = authenticationProvider;
     }
 
-    public Iterable<User> findAll() {
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
