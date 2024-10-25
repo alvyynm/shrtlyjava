@@ -29,8 +29,12 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/auth/users/{id}")
-    public ResponseEntity<StandardApiResponse<?>> getUserDetails(@PathVariable Integer id) {
-        return new ResponseEntity<>(new StandardApiResponse<>(true, "User found", userService.findById(id)), HttpStatus.OK);
+    public ResponseEntity<StandardApiResponse<UserDetailsResponseDTO>> getUserDetails(@PathVariable Integer id) {
+        User user = userService.findById(id);
+
+        UserDetailsResponseDTO userDetailsResponseDTO = new UserDetailsResponseDTO(
+                user.getUserId(), user.getUsername(), user.getEmail(), user.getUserRole(), user.getFullName());
+        return new ResponseEntity<>(new StandardApiResponse<>(true, "User found", userDetailsResponseDTO), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
