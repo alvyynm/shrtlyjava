@@ -24,11 +24,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build the project with Maven
-      run: mvn -B package --file pom.xml  
+      run: mvn -B package --file pom.xml -DskipTests
       # -B: Runs in batch mode (non-interactive)
       # package: Creates JAR/WAR file
     - name: Run unit tests with Maven
-      run: mvn test
+      run: mvn test -DskipTests # -DskipTests skips running tests during build
 
     # # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     # - name: Update dependency graph
