@@ -4,8 +4,10 @@ import com.shrtly.url.shortener.dtos.UrlDto;
 import com.shrtly.url.shortener.dtos.UrlResponseDTO;
 import com.shrtly.url.shortener.models.Url;
 import com.shrtly.url.shortener.models.UrlStat;
+import com.shrtly.url.shortener.models.User;
 import com.shrtly.url.shortener.repository.UrlStatsRepository;
 import com.shrtly.url.shortener.services.UrlService;
+import com.shrtly.url.shortener.services.UserService;
 import com.shrtly.url.shortener.utils.StandardApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
@@ -22,6 +27,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -31,10 +37,12 @@ public class UrlController {
 
     private final UrlService urlService;
     private final UrlStatsRepository urlStatsRepository;
+    private final UserService userService;
 
-    public UrlController(UrlService urlService, UrlStatsRepository urlStatsRepository) {
+    public UrlController(UrlService urlService, UrlStatsRepository urlStatsRepository, UserService userService) {
         this.urlService = urlService;
         this.urlStatsRepository = urlStatsRepository;
+        this.userService = userService;
     }
 
     @Operation(summary = "Index route for api", description = "Returns a greeting message")
@@ -74,6 +82,18 @@ public class UrlController {
         if(url == null) {
             return new ResponseEntity<>(new StandardApiResponse<>(false, "Url not found", null), HttpStatus.NOT_FOUND);
         }
+        // Retrieve the currently logged-in user's email
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUserEmail = (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername() : principal.toString();
+
+        // retrieve the user from db
+        User foundUser = userService.findByEmail(currentUserEmail);
+
+        // if logged-in user didn't create the url, return error message
+        if (foundUser == null || !Objects.equals(foundUser.getUserId(), url.getUserId())) {
+            throw new AccessDeniedException("You don't have necessary permissions");
+        }
+
         return new ResponseEntity<>(new StandardApiResponse<>(true, "Url found", url), HttpStatus.OK);
     }
 
@@ -108,6 +128,21 @@ public class UrlController {
 
     @GetMapping("/urls/{id}/statistics")
     public ResponseEntity<StandardApiResponse<?>> getStatistics(@PathVariable Integer id) {
+        // retrieve the url by its id
+        Url url = urlService.getUrlById(id);
+
+        // Retrieve the currently logged-in user's email
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String currentUserEmail = (principal instanceof UserDetails) ? ((UserDetails) principal).getUsername() : principal.toString();
+
+        // retrieve the user from db
+        User foundUser = userService.findByEmail(currentUserEmail);
+
+        // if logged-in user didn't create the url, return error message
+        if (foundUser == null || !Objects.equals(foundUser.getUserId(), url.getUser().getUserId())) {
+            throw new AccessDeniedException("You don't have necessary permissions");
+        }
+
         Iterable<UrlStat> urlStat = urlService.getUrlStats(id);
         if(!urlStat.iterator().hasNext()) {
             return new ResponseEntity<>(new StandardApiResponse<>(false, "Url has no stats", null), HttpStatus.NOT_FOUND);
