@@ -82,6 +82,11 @@ public class UrlService {
         return new UrlResponseDTO(url.getId(), url.getUrlId(), url.getOriginalUrl(), url.getShortenedUrl(), url.getUser().getUserId());
     }
 
+    public Url getUrlById(Integer id) {
+        Url url = urlRepository.findById(id).orElseThrow(() -> new UrlNotFoundException("URL not found for ID: " + id));
+        return url;
+    }
+
     public String deleteUrl(Integer id) {
         Url url = urlRepository.findById(id).orElse(null);
         urlRepository.deleteById(id);
