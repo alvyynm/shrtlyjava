@@ -5,10 +5,12 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Map;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -25,6 +27,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<StandardApiResponse<?>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        List<String> errorMessage = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(error -> error.getDefaultMessage())
+                .toList();
+
+        StandardApiResponse<?> response = new StandardApiResponse<>(false, "Validation error: " + errorMessage, null);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(UrlNotFoundException.class)
