@@ -12,4 +12,7 @@ public class UrlDto {
         return originalUrl;
     }
 
+    public void setOriginalUrl(String originalUrl) {
+        this.originalUrl = originalUrl;
+    }
 }
