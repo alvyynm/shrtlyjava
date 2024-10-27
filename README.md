@@ -10,3 +10,7 @@ This project is a simple URL shortening service.
 - Spring Boot / JPA (with Hibernate) / Security
 - SpringDoc for OpenApi documentation
 - XML-based config (for global props) mixed with annotations
+
+## Dependencies
+- Maven
+- JDK 17
