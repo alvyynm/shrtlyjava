@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: shrtly
+
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/shrtly}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+security:
+  jwt:
+    expiration-time: ${JWT_EXPIRATION:3600000}
+    secret-key: ${JWT_SECRET:}  # Don't put actual secret here
