@@ -11,9 +11,13 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_CONNECTION=${DB_CONNECTION}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
+        SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+        DB_CONNECTION: ${DB_CONNECTION}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
+        JWT_SECRET: ${JWT_SECRET}
+        TOKEN_EXPIRATION: ${TOKEN_EXPIRATION}
+
     networks:
       - app-network
 
